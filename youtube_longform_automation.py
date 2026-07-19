@@ -214,6 +214,18 @@ def generate_phrases_for_longform(category_english: str, num_phrases: int) -> li
 
 Style: Make each phrase feel like a {viral_style} - something people would want to share!
 
+CRITICAL RULE - STRICTLY ENFORCE:
+The "english" field must contain PURE ENGLISH words only. ZERO Hindi/Devanagari.
+The "hindi" field contains the Hindi translation in Devanagari script.
+The "pronunciation" field is phonetic English spelling.
+
+WRONG (mixed language): {{"english": "Apna sapna sach karo, believe in yourself", ...}}
+WRONG (Hindi in english): {{"english": "Follow your sapne and success will come", ...}}
+CORRECT: {{"english": "Make your dreams come true, believe in yourself.", "hindi": "अपने सपने सच करो, खुद पर विश्वास करो।", "pronunciation": "ap-ne sap-ne sach ka-ro, khud par vi-shwas ka-ro."}}
+CORRECT: {{"english": "Follow your dreams and success will come.", "hindi": "अपने सपनों का पालन करो और सफलता आएगी।", "pronunciation": "ap-ne sap-non ka paa-lan ka-ro aur saf-al-taa aa-e-gi."}}
+
+The english field MUST be 100% English words only. NO Hindi words allowed.
+
 IMPORTANT RULES FOR NATURAL SPEECH:
 1. Keep phrases SHORT (5-12 words max per language)
 2. Add NATURAL PAUSES using commas (e.g., "Dream big, start small")
@@ -225,9 +237,9 @@ IMPORTANT RULES FOR NATURAL SPEECH:
 8. Vary sentence structure for natural flow
 
 For each phrase:
-1. English phrase (with commas for natural pauses)
-2. Hindi translation (Devanagari script)
-3. Pronunciation guide (phonetic spelling for English speakers)
+1. English phrase (pure English, zero Hindi) with commas for natural pauses
+2. Hindi translation (Devanagari script only)
+3. Pronunciation guide (phonetic English spelling)
 
 Return as JSON array:
 [{{"english": "...", "hindi": "...", "pronunciation": "..."}}]
@@ -237,7 +249,7 @@ IMPORTANT: Create FRESH, UNIQUE phrases that haven't been used before.{exclusion
                 payload = {
                     "model": AI_MODEL,
                     "messages": [
-                        {"role": "system", "content": "You are a viral Hindi teacher creating engaging educational content for YouTube. Create short, natural phrases with pauses."},
+                        {"role": "system", "content": "You are a viral Hindi teacher. CRITICAL: The 'english' field must contain PURE ENGLISH words ONLY. NO Hindi/Devanagari in english field. Hindi goes in the 'hindi' field. This is strictly enforced."},
                         {"role": "user", "content": prompt}
                     ],
                     "temperature": 1.0
